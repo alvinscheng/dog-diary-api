@@ -12,9 +12,10 @@ const app = express()
 
 app.use(bodyParser.json())
 
-// app.post('/dogs', upload.single('picture'), (req, res) => {
-//
-// })
+app.post('/dogs', upload.single('picture'), (req, res) => {
+  console.log(req.body)
+  knex('dogs').insert(req.body).then(() => res.sendStatus(201))
+})
 
 // app.post('/users', upload.single('picture'), (req, res) => {
 //   const user = snakecaseKeys(req.body)
