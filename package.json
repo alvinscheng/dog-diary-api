@@ -10,7 +10,8 @@
     "db:down": "pg-bump down",
     "db:status": "pg-bump status",
     "db:rebuild": "pg-bump down && pg-bump up",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "heroku-postbuild": "pg-bump up"
   },
   "repository": {
     "type": "git",
