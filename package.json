@@ -1,0 +1,38 @@
+{
+  "name": "dog-diary-api",
+  "version": "1.0.0",
+  "description": "API for the Dog Diary phone app.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node .",
+    "db:make": "pg-bump create",
+    "db:up": "pg-bump up",
+    "db:down": "pg-bump down",
+    "db:status": "pg-bump status",
+    "db:rebuild": "pg-bump down && pg-bump up",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "heroku-postbuild": "pg-bump up"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alvinscheng/dog-diary-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alvinscheng/dog-diary-api/issues"
+  },
+  "homepage": "https://github.com/alvinscheng/dog-diary-api#readme",
+  "devDependencies": {
+    "nodemon": "^1.11.0",
+    "pg-bump": "^1.0.3"
+  },
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "dotenv": "^4.0.0",
+    "express": "^4.15.4",
+    "knex": "^0.13.0",
+    "pg": "^7.1.0"
+  }
+}
