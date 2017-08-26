@@ -29,18 +29,9 @@ app.post('/dogs', upload.single('profile_picture'), (req, res) => {
 app.get('/dogs', (req, res) => {
   knex('dogs').orderBy('id', 'desc')
     .then(data => {
-      console.log('/uploads/' + data[0].profile_picture)
       res.json(data)
     })
 })
-
-// app.get('/dog/:name', (req, res) => {
-//   const { name } = req.params
-//   knex('dogs').where('name', name).limit(1)
-//     .then(data => {
-//       res.sendFile(path.join(__dirname, '/uploads', data[0].profile_picture))
-//     })
-// })
 
 const PORT = process.env.PORT || 3000
 app.listen(PORT, console.log('Listening on ' + PORT))
