@@ -40,12 +40,20 @@ app.post('/pictures/:dogId', upload.single('picture'), (req, res) => {
     date
   }
 
-  console.log(picture)
   knex('pictures').insert(picture).then(() => res.sendStatus(201))
 })
 
 app.get('/dogs', (req, res) => {
   knex('dogs').orderBy('id', 'desc')
+    .then(data => {
+      res.json(data)
+    })
+})
+
+app.get('/pictures/:dogId', (req, res) => {
+  knex('pictures')
+    .where('dog_id', req.params.dogId)
+    .orderBy('id', 'desc')
     .then(data => {
       res.json(data)
     })
