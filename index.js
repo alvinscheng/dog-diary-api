@@ -29,12 +29,18 @@ app.post('/dogs', upload.single('profile_picture'), (req, res) => {
 app.post('/pictures/:dogId', upload.single('picture'), (req, res) => {
   const { note } = req.body
   const dog_id = req.params.dogId
+
+  const now = new Date()
+  const date = now.toDateString()
+
   const picture = {
     picture: req.file.filename,
     note,
     dog_id,
     date
   }
+
+  console.log(picture)
   knex('pictures').insert(picture).then(() => res.sendStatus(201))
 })
 
