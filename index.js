@@ -26,8 +26,34 @@ app.post('/dogs', upload.single('profile_picture'), (req, res) => {
   knex('dogs').insert(dog).then(() => res.sendStatus(201))
 })
 
+app.post('/pictures/:dogId', upload.single('picture'), (req, res) => {
+  const { note } = req.body
+  const dog_id = req.params.dogId
+
+  const now = new Date()
+  const date = now.toDateString()
+
+  const picture = {
+    picture: req.file.filename,
+    note,
+    dog_id,
+    date
+  }
+
+  knex('pictures').insert(picture).then(() => res.sendStatus(201))
+})
+
 app.get('/dogs', (req, res) => {
   knex('dogs').orderBy('id', 'desc')
+    .then(data => {
+      res.json(data)
+    })
+})
+
+app.get('/pictures/:dogId', (req, res) => {
+  knex('pictures')
+    .where('dog_id', req.params.dogId)
+    .orderBy('id', 'desc')
     .then(data => {
       res.json(data)
     })
