@@ -9,6 +9,14 @@ const knex = require('knex')({
   dialect: 'pg',
   connection: process.env.DATABASE_URL
 })
+const AWS = require('aws-sdk')
+const BUCKET_NAME = 'dog-diary'
+
+const s3 = new AWS.s3({
+  apiVersion: '2006-03-01',
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+})
 
 const app = express()
 
