@@ -3,7 +3,9 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const path = require('path')
 const multer  = require('multer')
-const upload = multer({ dest: 'public/uploads/' })
+const storage = multer.memoryStorage()
+const upload = multer({ storage })
+const uuid = require('uuid/v4')
 const cors = require('cors')
 const knex = require('knex')({
   dialect: 'pg',
@@ -12,7 +14,7 @@ const knex = require('knex')({
 const AWS = require('aws-sdk')
 const BUCKET_NAME = 'dog-diary'
 
-const s3 = new AWS.s3({
+const s3 = new AWS.S3({
   apiVersion: '2006-03-01',
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
@@ -25,13 +27,25 @@ app.use(bodyParser.json())
 app.use(cors())
 
 app.post('/dogs', upload.single('profile_picture'), (req, res) => {
+  if (!req.file) res.status(400).send('A picture is required.')
   const { name, age } = req.body
+  const key = uuid()
   const dog = {
     name,
     age,
-    profile_picture: req.file.filename
+    key,
+    profile_picture: req.file.originalname
   }
-  knex('dogs').insert(dog).then(() => res.sendStatus(201))
+  knex('dogs').insert(dog).then(() => {
+    s3.upload({
+      Bucket: BUCKET_NAME,
+      Key: key,
+      Body: req.file.buffer.toString()
+    }, (err, data) => {
+      if (err) throw err
+      res.sendStatus(201)
+    })
+  })
 })
 
 app.post('/pictures/:dogId', upload.single('picture'), (req, res) => {

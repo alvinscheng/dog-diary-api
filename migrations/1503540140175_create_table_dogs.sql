@@ -3,7 +3,8 @@ create table dogs (
   id serial,
   name text,
   age text,
-  profile_picture text
+  profile_picture text,
+  key text
 );
 
 ---
