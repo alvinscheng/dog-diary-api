@@ -51,23 +51,43 @@ app.post('/dogs', upload.single('profile_picture'), (req, res) => {
 app.post('/pictures/:dogId', upload.single('picture'), (req, res) => {
   const { note } = req.body
   const dog_id = req.params.dogId
-
+  const key = uuid()
   const now = new Date()
   const date = now.toDateString()
 
   const picture = {
-    picture: req.file.filename,
+    picture: req.file.originalname,
     note,
     dog_id,
+    key,
     date
   }
 
-  knex('pictures').insert(picture).then(() => res.sendStatus(201))
+  knex('pictures').insert(picture).then(() => {
+    s3.upload({
+      Bucket: BUCKET_NAME,
+      Key: key,
+      Body: req.file.buffer.toString()
+    }, (err, data) => {
+      if (err) throw err
+      res.sendStatus(201)
+    })
+  })
 })
 
 app.get('/dogs', (req, res) => {
   knex('dogs').orderBy('id', 'desc')
     .then(data => {
+      // const promises = []
+      // data.forEach(dog => {
+      //   promises.push(new Promise(resolve => {
+      //     s3.getObject({
+      //       Bucket: BUCKET_NAME,
+      //       Key: dog.key
+      //     })
+      //   }))
+      // })
+
       res.json(data)
     })
 })

@@ -4,6 +4,7 @@ create table pictures (
   picture text,
   note text,
   dog_id integer,
+  key text,
   date text
 );
 
